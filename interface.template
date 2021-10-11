@@ -1,0 +1,5 @@
+export interface {{entity.name|capitalize}} {
+    {% for property in entity.properties %}
+            {{property.name}}: string;
+    {% endfor %}
+}

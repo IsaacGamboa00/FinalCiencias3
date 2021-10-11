@@ -6,16 +6,21 @@ from os import mkdir
 from os.path import exists, dirname, join
 import jinja2
 from entity_test import get_entity_mm
+import subprocess
 
 
 def main(debug=False):
 
     this_folder = dirname(__file__)
 
+    #subprocess.call([this_folder+"/initProject.bat"])
+    subprocess.call([this_folder+"/createFolders.bat"])
+
     entity_mm = get_entity_mm(debug)
 
-    # Build Person model from person.ent file
     person_model = entity_mm.model_from_file(join(this_folder, 'person.ent'))
+
+
 
     def is_entity(n):
         """
@@ -26,67 +31,56 @@ def main(debug=False):
         else:
             return False
 
-    def javatype(s):
-        """
-        Maps type names from PrimitiveType to Java.
-        """
-        return {
-                'integer': 'int',
-                'string': 'String'
-        }.get(s.name, s.name)
-
-    # Create output folder
-    srcgen_folder = join(this_folder, 'srcgen')
+    srcgen_folder = join(this_folder, 'FinalProject/src/app')
     if not exists(srcgen_folder):
         mkdir(srcgen_folder)
 
-    # Initialize template engine.
     jinja_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(this_folder),
         trim_blocks=True,
         lstrip_blocks=True)
 
-    # Register filter for mapping Entity type names to Java type names.
 
     jinja_env.tests['entity'] = is_entity
 
-    jinja_env.filters['javatype'] = javatype
-
-    # Load template
-    template = jinja_env.get_template('clase.template')
-
-    for entity in person_model.entities:
-        # For each entity generate java file
-        with open(join(srcgen_folder,
-                       "%s.java" % entity.name.capitalize()), 'w') as f:
-            f.write(template.render(entity=entity))
-
-    # Load agregar template
     template = jinja_env.get_template('list.template')
+    auxEntity = person_model.entities[0]
+    with open(join(srcgen_folder+"/components",
+        "%s.component.html" % auxEntity.name.capitalize()), 'w') as f:
+        f.write(template.render(entity=auxEntity))
+
+    template = jinja_env.get_template('style.template')
+
+    with open(join(srcgen_folder+"/components",
+        "%s.component.scss" % auxEntity.name.capitalize()), 'w') as f:
+        f.write(template.render(entity=auxEntity))
+
+    template = jinja_env.get_template('logic.template')
+
+    with open(join(srcgen_folder+"/components",
+        "%s.component.ts" % auxEntity.name.capitalize()), 'w') as f:
+        f.write(template.render(entity=auxEntity))  
+
+    template = jinja_env.get_template('module.template')
+
+    with open(join(srcgen_folder,
+        "app.module.ts"), 'w') as f:
+        f.write(template.render(entity=auxEntity)) 
+
+    template = jinja_env.get_template('app.template')
+
+    with open(join(srcgen_folder,
+        "app.component.html"), 'w') as f:
+        f.write(template.render(entity=auxEntity))  
+
+    template = jinja_env.get_template('interface.template')
 
     for entity in person_model.entities:
-        # For each entity generate html file
-        with open(join(srcgen_folder,
-                       "agregar%s.html" % entity.name.capitalize()), 'w') as f:
+        with open(join(srcgen_folder+"/model",
+                       "%s.ts" % entity.name.capitalize()), 'w') as f:
             f.write(template.render(entity=entity))
 
-    # Load template
-    template = jinja_env.get_template('editar.template')
 
-    for entity in person_model.entities:
-        # For each entity generate html file
-        with open(join(srcgen_folder,
-                       "editar%s.html" % entity.name.capitalize()), 'w') as f:
-            f.write(template.render(entity=entity))
-
-    # Load template
-    template = jinja_env.get_template('agregarCtrl.template')
-
-    for entity in person_model.entities:
-        # For each entity generate js file
-        with open(join(srcgen_folder,
-                       "agregar%s.js" % entity.name.capitalize()), 'w') as f:
-            f.write(template.render(entity=entity))
 
 if __name__ == "__main__":
     main()

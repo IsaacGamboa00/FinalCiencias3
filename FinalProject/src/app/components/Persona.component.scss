@@ -1,0 +1,79 @@
+*{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+#container{
+    background: black;
+    height: 1080px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    
+}
+
+#card-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+.card{
+    position: relative;
+    width: 25%;
+    height: 150%;
+    background: rgba($color: #9c9c9c, $alpha: 0.2);
+    border-radius: 30px;
+    color: black;
+    border: none; 
+    text-align: right;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+
+.content{
+    margin: 20px;
+    font-size: 1em;
+}
+.imgBx{
+    position: absolute;
+    background: rgb(39, 39, 39);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 3px #ffffff;
+    border-radius: 30px;
+    overflow: hidden;
+    transition: 0.5s ease-in-out;
+}
+
+
+.card:hover .imgBx  {
+    width: 150px;
+    height: 150px;
+    left: -50px;
+    top: calc(50% - 75px);
+    transition: 0.5s ease-in-out;
+    background: #00ffe9;
+    
+}
+
+.imgBx h1{
+    font-size: 4em;
+    color: rgba($color: #9c9c9c, $alpha: 0.2);
+    position: absolute;
+    bottom: 0;
+}
+
+.card:hover .imgBx h1  {
+    font-size: 2em;
+    color: rgba($color: #000000, $alpha: 0.8);
+    
+}

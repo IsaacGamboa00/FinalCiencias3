@@ -1,11 +1,11 @@
 entity Persona {
-  nombre : string       // Nombre de la persona
-  apellido : string       // Apellido de la persona
-  direccion: Direccion    // It is defined by the Comment rule in the grammar
-  edad: integer        // integer and string are built-in objects
-  telefono : Telefono       // Nombre de la persona
-  correo : string       // mail de la persona
-}                     // See entity_test.py
+  nombre : string       
+  apellido : string       
+  direccion: string    
+  edad: string        
+  telefono : string       
+  correo : string     
+}                     
 
 entity Direccion {
   calle : string
